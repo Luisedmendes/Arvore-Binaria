@@ -1,0 +1,114 @@
+#include <iostream>
+#include <iomanip>
+#include <list>
+
+using namespace std;
+
+struct treenode{
+    
+	int info;
+    treenode *esq;
+    treenode *dir;
+};
+
+typedef treenode* treenodeptr;
+
+//funcao para inserir os elementos da arvore
+void tInsere(treenodeptr &p, int x){
+    
+	//insere na raiz
+    if(p == NULL){
+        
+		p = new treenode;
+        p->info = x;
+        p->esq = NULL;
+        p->dir = NULL;
+    }
+    
+	//insere na subarvore esquerda
+    else if(x < p->info)
+        tInsere(p->esq, x);
+	
+//insere na subarvore direita
+    else 
+        tInsere(p->dir, x);
+}
+
+//encontra o menor elemento do lado direito da arvore
+treenodeptr tMenor(treenodeptr &raiz){
+    
+	treenodeptr t;
+    
+    t = raiz;
+    
+    //encontrou o menor valor
+    if(t->esq == NULL){
+		
+		raiz = raiz->dir;
+		cout << t->info;
+	}
+    
+    //continua a busca na subarvore esquerda
+    else 
+    	return tMenor(raiz->esq);
+}
+
+//encontra o maior elemento da arvore
+treenodeptr tMaior(treenodeptr &raiz){
+    
+	treenodeptr t;
+    
+    t = raiz;
+    
+    //encontrou o menor valor
+    if(t->dir == NULL){
+		
+		raiz = raiz->dir;
+		cout << t->info;
+	}
+    
+    //continua a busca na subarvore esquerda
+    else 
+    	return tMaior(raiz->dir);
+}
+
+
+//funcao pra destruir a arvore
+void tDestruir(treenodeptr &arvore){
+	
+	if(arvore != NULL){
+		
+		tDestruir(arvore->esq);
+		tDestruir(arvore->dir);
+		delete arvore;
+	}
+	
+	arvore = NULL;
+}
+
+int main(){
+    
+	treenodeptr arvore = NULL; //ponteiro para a raiz
+    int n;
+    
+	//inserindo os elementos na arvore
+    cin >> n;
+    
+	while(n != -1){
+        
+		tInsere(arvore, n);
+        cin >> n;
+    }
+    
+    tMenor(arvore);
+    cout << " e ";
+    tMaior(arvore);
+    
+	
+    
+    //liberacao da memoria utilizada
+    tDestruir(arvore);
+    
+	
+	return 0;
+}
